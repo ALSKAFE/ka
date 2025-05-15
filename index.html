@@ -10,59 +10,82 @@
     direction: rtl;
     margin: 20px;
     text-align: center;
+    background: #f9f9f9;
+    color: #333;
+  }
+  h1 {
+    margin-bottom: 10px;
   }
   #monthYear {
-    font-size: 22px;
-    margin-bottom: 15px;
+    font-size: 24px;
     font-weight: bold;
+    margin-bottom: 15px;
   }
   #controls {
     margin-bottom: 20px;
   }
   button {
-    padding: 8px 16px;
+    padding: 8px 14px;
     margin: 0 10px;
     cursor: pointer;
     font-size: 16px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #388e3c;
   }
   #calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
+    gap: 8px;
     max-width: 700px;
     margin: auto;
   }
   .day {
-    border: 1px solid #ccc;
+    background: white;
+    border: 1px solid #ddd;
     height: 90px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;
     user-select: none;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .day:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 14px rgb(0 0 0 / 0.15);
   }
   .day.empty {
     background-color: #f0f0f0;
     cursor: default;
+    box-shadow: none;
+    transform: none;
+  }
+  .day-number {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 18px;
   }
   /* ألوان الحجز */
   .free {
     background-color: white;
+    color: #333;
   }
   .one-period {
     background-color: #a3d9a5; /* أخضر فاتح */
+    color: #1b3a12;
   }
   .two-periods {
     background-color: #4caf50; /* أخضر غامق */
     color: white;
-  }
-  .day-number {
-    font-weight: bold;
-    margin-bottom: 7px;
-    font-size: 18px;
   }
 </style>
 </head>
@@ -74,9 +97,104 @@
   <button id="prevMonth">الشهر السابق</button>
   <button id="nextMonth">الشهر التالي</button>
 </div>
-
 <div id="calendar"></div>
 
-<script src="app.js"></script>
+<script>
+  const monthYear = document.getElementById('monthYear');
+  const calendar = document.getElementById('calendar');
+  const prevBtn = document.getElementById('prevMonth');
+  const nextBtn = document.getElementById('nextMonth');
+
+  const monthNames = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+
+  // بيانات الحجز لكل يوم (key: "month-day-year" ، value: 0,1,2)
+  let bookings = {};
+
+  // الشهر والسنة المختارين (يبدأ الشهر الحالي)
+  let currentDate = new Date();
+  let selectedMonth = currentDate.getMonth() + 1; // getMonth() من 0-11
+  let selectedYear = currentDate.getFullYear();
+
+  function daysInMonth(month, year) {
+    return new Date(year, month, 0).getDate(); // آخر يوم من الشهر
+  }
+
+  function updateMonthYear() {
+    monthYear.textContent = `شهر ${monthNames[selectedMonth - 1]} - ${selectedYear}`;
+  }
+
+  function generateCalendar() {
+    calendar.innerHTML = '';
+
+    updateMonthYear();
+
+    const daysCount = daysInMonth(selectedMonth, selectedYear);
+
+    // نحدد أول يوم بالشهر (0=الأحد, 6=السبت)
+    const firstDay = new Date(selectedYear, selectedMonth -1, 1).getDay();
+
+    // حسب dir=rtl، بداية الأسبوع من الأحد لكن سيظهر على اليمين (نتركها هكذا)
+    // نضيف أيام فارغة قبل بداية الشهر
+    for(let i=0; i < firstDay; i++) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.classList.add('day', 'empty');
+      calendar.appendChild(emptyDiv);
+    }
+
+    for(let day = 1; day <= daysCount; day++) {
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'day';
+
+      // مفتاح الحجز
+      const key = `${selectedYear}-${selectedMonth}-${day}`;
+
+      const status = bookings[key] || 0;
+
+      // رقم اليوم
+      const dayNumber = document.createElement('div');
+      dayNumber.className = 'day-number';
+      dayNumber.textContent = day;
+      dayDiv.appendChild(dayNumber);
+
+      // لون حسب حالة الحجز
+      if(status === 0) {
+        dayDiv.classList.add('free');
+      } else if(status === 1) {
+        dayDiv.classList.add('one-period');
+      } else if(status === 2) {
+        dayDiv.classList.add('two-periods');
+      }
+
+      dayDiv.onclick = () => {
+        // تغير حالة الحجز بشكل دائري: 0 -> 1 -> 2 -> 0
+        bookings[key] = (status + 1) % 3;
+        generateCalendar();
+      };
+
+      calendar.appendChild(dayDiv);
+    }
+  }
+
+  prevBtn.onclick = () => {
+    selectedMonth--;
+    if (selectedMonth < 1) {
+      selectedMonth = 12;
+      selectedYear--;
+    }
+    generateCalendar();
+  };
+
+  nextBtn.onclick = () => {
+    selectedMonth++;
+    if (selectedMonth > 12) {
+      selectedMonth = 1;
+      selectedYear++;
+    }
+    generateCalendar();
+  };
+
+  generateCalendar();
+</script>
+
 </body>
 </html>
