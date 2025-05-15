@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>جدول الحجز - من الصفر</title>
+<title>جدول حجز الشاليه</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -12,36 +12,40 @@
     text-align: center;
   }
   #monthYear {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: bold;
   }
   #controls {
     margin-bottom: 20px;
   }
   button {
-    padding: 8px 15px;
-    margin: 0 5px;
+    padding: 8px 16px;
+    margin: 0 10px;
     cursor: pointer;
+    font-size: 16px;
   }
   #calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    gap: 6px;
     max-width: 700px;
     margin: auto;
   }
   .day {
     border: 1px solid #ccc;
-    height: 80px;
+    height: 90px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;
     user-select: none;
-    padding: 5px;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
   }
   .day.empty {
-    background-color: #eee;
+    background-color: #f0f0f0;
     cursor: default;
   }
   /* ألوان الحجز */
@@ -57,13 +61,14 @@
   }
   .day-number {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 7px;
+    font-size: 18px;
   }
 </style>
 </head>
 <body>
 
-<h2>جدول حجز الشاليه</h2>
+<h1>جدول حجز الشاليه</h1>
 <div id="monthYear"></div>
 <div id="controls">
   <button id="prevMonth">الشهر السابق</button>
