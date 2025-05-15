@@ -1,0 +1,96 @@
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: "Tajawal", sans-serif;
+  background: #f0f0f5;
+  direction: rtl;
+  color: #333;
+}
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+header button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 10px;
+}
+#month-label {
+  font-size: 1.2rem;
+  min-width: 80px;
+  text-align: center;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+.calendar-cell {
+  background: #fff;
+  border-radius: 6px;
+  padding: 10px;
+  min-height: 60px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  transition: background 0.2s;
+}
+.calendar-cell.free:hover {
+  background: #e8f4fd;
+}
+.calendar-cell.booked-1 {
+  background: #a8e6cf;
+}
+.calendar-cell.booked-2 {
+  background: #56c596;
+}
+.calendar-cell .day-number {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  font-weight: bold;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal.hidden { display: none; }
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 320px;
+  text-align: right;
+  position: relative;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+#modal-actions button {
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  background: #3498db;
+  color: #fff;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
